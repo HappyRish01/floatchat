@@ -32,9 +32,9 @@ const ChatInterface = () => {
   
   // Suggested queries that float as hints
   const suggestions = [
-    "Plot temperature profile for the Arabian Sea",
-    "Compare salinity in Pacific vs Atlantic Ocean",
-    "Show me data from Bay of Bengal for March 2023"
+    "Tell me about temperature profiles in the Arabian Sea",
+    "Compare salinity between Pacific and Atlantic Ocean",
+    "What data is available from Bay of Bengal for March 2023?"
   ];
   const messagesEndRef = useRef(null);
   const [thinking, setThinking] = useState(false);
@@ -42,13 +42,10 @@ const ChatInterface = () => {
   const handleSendMessage = () => {
     if (!message.trim()) return;
     
-    // Store the current message before clearing it
-    const currentMessage = message;
-    
     // Add user message to chat
     const userMessage = {
       id: chatHistory.length + 1,
-      content: currentMessage,
+      content: message,
       sender: 'user',
       timestamp: new Date().toISOString()
     };
@@ -64,91 +61,63 @@ const ChatInterface = () => {
       setThinking(false);
       
       let botResponse;
-      const userInput = currentMessage.toLowerCase();
-      console.log('Processing user input:', userInput); // Debug log
+      const userInput = message.toLowerCase();
       
       // Generate different response types based on user input
       if (userInput.includes('plot') || userInput.includes('graph') || userInput.includes('visualize') || userInput.includes('chart')) {
-        console.log('Matched plot condition'); // Debug log
-        // Plotly visualization response
+        // Simple text response for visualization requests
         botResponse = {
-          id: Date.now(), // Use timestamp for unique ID
-          content: `Based on your request, here's a comprehensive ocean analysis with multiple visualizations:
+          id: chatHistory.length + 2,
+          content: `I understand you're looking for a visualization of oceanographic data. While I can't generate plots directly in this interface, I can help you understand the data patterns:
 
-## Ocean Temperature and Salinity Analysis
+For Pacific Ocean temperature profiles:
+- Surface temperatures typically range from 25-30°C
+- Temperature decreases rapidly in the thermocline (0-200m depth)
+- Deep ocean temperatures stabilize around 2-5°C below 1000m
+- Salinity patterns show subtropical maxima around 200m depth
 
-<<PLOTLY_JSON_BEGIN>>
-{"data":[{"x":[0,50,100,150,200,300,400,500,600,700,800,900,1000,1200,1500,2000],"y":[28.5,26.8,24.2,18.5,12.8,8.9,6.7,5.2,4.8,4.3,3.9,3.6,3.2,2.8,2.4,2.1],"mode":"lines+markers","name":"Temperature (°C)","type":"scatter","line":{"color":"#4dabf7","width":3},"marker":{"color":"#4dabf7","size":6}},{"x":[0,50,100,150,200,300,400,500,600,700,800,900,1000,1200,1500,2000],"y":[34.2,34.8,35.1,35.3,35.0,34.7,34.5,34.6,34.7,34.8,34.9,35.0,35.1,35.0,34.9,34.8],"mode":"lines+markers","name":"Salinity (PSU)","type":"scatter","yaxis":"y2","line":{"color":"#ff6b35","width":3},"marker":{"color":"#ff6b35","size":6}},{"x":[0,50,100,150,200,300,400,500,600,700,800,900,1000,1200,1500,2000],"y":[280,265,245,220,195,175,160,150,145,140,138,135,132,128,125,120],"mode":"lines+markers","name":"Oxygen (μmol/kg)","type":"scatter","yaxis":"y3","line":{"color":"#51cf66","width":3},"marker":{"color":"#51cf66","size":6}}],"layout":{"title":{"text":"Multi-Parameter Ocean Profile - Indian Ocean","font":{"size":18,"color":"#FFFFFF"}},"xaxis":{"title":"Depth (meters)","gridcolor":"rgba(255,255,255,0.1)","zerolinecolor":"rgba(255,255,255,0.2)"},"yaxis":{"title":"Temperature (°C)","titlefont":{"color":"#4dabf7"},"tickfont":{"color":"#4dabf7"},"gridcolor":"rgba(255,255,255,0.1)","zerolinecolor":"rgba(255,255,255,0.2)"},"yaxis2":{"title":"Salinity (PSU)","titlefont":{"color":"#ff6b35"},"tickfont":{"color":"#ff6b35"},"overlaying":"y","side":"right","gridcolor":"rgba(255,255,255,0.05)"},"yaxis3":{"title":"Oxygen (μmol/kg)","titlefont":{"color":"#51cf66"},"tickfont":{"color":"#51cf66"},"overlaying":"y","side":"right","position":0.95},"showlegend":true,"legend":{"x":0.7,"y":0.95,"bgcolor":"rgba(0,0,0,0.5)","bordercolor":"rgba(255,255,255,0.2)","borderwidth":1}}}
-<<PLOTLY_JSON_END>>
-
-### Key Observations:
-- **Temperature**: Shows classic thermocline structure with rapid decrease in upper 200m
-- **Salinity**: Exhibits subsurface maximum around 150-200m depth (typical of subtropical waters)
-- **Oxygen**: Displays oxygen minimum zone between 400-800m depth
-
-<<MARKDOWN_TABLE_BEGIN>>
-| Depth Layer | Temperature Range (°C) | Salinity Range (PSU) | Oxygen Range (μmol/kg) | Characteristics |
-|-------------|------------------------|----------------------|------------------------|-----------------|
-| **Surface (0-50m)** | 26.8 - 28.5 | 34.2 - 34.8 | 265 - 280 | Mixed layer, high oxygen |
-| **Thermocline (50-200m)** | 12.8 - 26.8 | 34.8 - 35.3 | 195 - 265 | Rapid temperature decline |
-| **Intermediate (200-1000m)** | 3.2 - 12.8 | 34.5 - 35.1 | 132 - 195 | Oxygen minimum zone |
-| **Deep (1000-2000m)** | 2.1 - 3.2 | 34.8 - 35.1 | 120 - 132 | Cold, stable waters |
-<<MARKDOWN_TABLE_END>>
-
-This profile represents typical conditions in the tropical Indian Ocean, showing the complex interplay between physical and biogeochemical processes that shape our ocean's structure.`,
+Would you like me to provide specific data values or help you understand particular oceanographic phenomena?`,
           sender: 'bot',
           timestamp: new Date().toISOString()
         };
       } else if (userInput.includes('compare') || userInput.includes('table') || userInput.includes('summary')) {
-        // Markdown table response
+        // Simple text response for comparison requests
         botResponse = {
-          id: Date.now() + 1,
-          content: `Here's a comprehensive comparative analysis of global ocean basins with detailed oceanographic parameters:
+          id: chatHistory.length + 2,
+          content: `Here's a comparative summary of major ocean basins:
 
-## Global Ocean Basin Comparison
+**North Atlantic Ocean:**
+- Average Surface Temperature: 22.1°C
+- Average Salinity: 36.1 PSU
+- Average Oxygen: 245.3 μmol/kg
+- Mixed Layer Depth: 73.2m
 
-<<MARKDOWN_TABLE_BEGIN>>
-| Ocean Basin | Surface Temp (°C) | Salinity (PSU) | Oxygen (μmol/kg) | Mixed Layer (m) | Chlorophyll (mg/m³) | pH | Area (10⁶ km²) |
-|-------------|-------------------|----------------|------------------|-----------------|---------------------|----|--------------------|
-| **North Atlantic** | 22.1 ± 8.5 | 36.1 ± 1.2 | 245.3 ± 45.2 | 73.2 ± 28.1 | 0.52 ± 0.31 | 8.05 | 41.5 |
-| **South Atlantic** | 21.7 ± 6.8 | 36.4 ± 0.9 | 241.8 ± 38.7 | 67.5 ± 22.4 | 0.48 ± 0.28 | 8.08 | 40.3 |
-| **North Pacific** | 20.8 ± 9.2 | 34.2 ± 1.8 | 233.6 ± 52.1 | 56.8 ± 31.5 | 0.31 ± 0.22 | 8.02 | 77.2 |
-| **South Pacific** | 22.5 ± 7.1 | 35.3 ± 1.1 | 236.7 ± 41.3 | 65.1 ± 26.8 | 0.28 ± 0.19 | 8.06 | 85.1 |
-| **Indian Ocean** | 27.2 ± 4.3 | 35.0 ± 1.4 | 222.5 ± 48.9 | 48.7 ± 19.2 | 0.42 ± 0.35 | 8.03 | 70.6 |
-| **Southern Ocean** | 5.2 ± 3.8 | 34.1 ± 0.7 | 301.4 ± 28.5 | 92.6 ± 45.3 | 0.68 ± 0.52 | 8.12 | 20.3 |
-| **Arctic Ocean** | -0.8 ± 2.1 | 32.8 ± 2.3 | 285.2 ± 35.1 | 15.3 ± 8.7 | 0.15 ± 0.12 | 8.18 | 14.1 |
-<<MARKDOWN_TABLE_END>>
+**Pacific Ocean:**
+- Average Surface Temperature: 21.6°C
+- Average Salinity: 34.8 PSU
+- Average Oxygen: 235.2 μmol/kg
+- Mixed Layer Depth: 61.0m
 
-### Key Insights:
+**Indian Ocean:**
+- Average Surface Temperature: 27.2°C
+- Average Salinity: 35.0 PSU
+- Average Oxygen: 222.5 μmol/kg
+- Mixed Layer Depth: 48.7m
 
-**🌡️ Temperature Patterns:**
-- Indian Ocean: Warmest average (27.2°C) due to tropical location
-- Arctic Ocean: Coldest (-0.8°C) with permanent ice cover
-- Southern Ocean: Cold (5.2°C) but highly variable seasonally
+**Southern Ocean:**
+- Average Surface Temperature: 5.2°C
+- Average Salinity: 34.1 PSU
+- Average Oxygen: 301.4 μmol/kg
+- Mixed Layer Depth: 92.6m
 
-**🧂 Salinity Distribution:**
-- North Atlantic: Highest salinity (36.4 PSU) from evaporation
-- Arctic Ocean: Lowest salinity (32.8 PSU) from freshwater input
-- Pacific basins: Generally lower salinity than Atlantic
-
-**💨 Oxygen Levels:**
-- Southern Ocean: Highest oxygen (301.4 μmol/kg) from cold water solubility
-- Indian Ocean: Lowest oxygen (222.5 μmol/kg) due to warm temperatures
-- Arctic Ocean: High oxygen despite low temperatures
-
-**🌊 Mixed Layer Dynamics:**
-- Southern Ocean: Deepest mixing (92.6m) from strong winds
-- Arctic Ocean: Shallowest mixing (15.3m) due to stratification
-- Tropical regions: Generally shallower mixed layers
-
-This analysis reveals the complex interplay between latitude, climate, and ocean circulation patterns that create distinct oceanographic signatures in each basin.`,
+The Southern Ocean stands out with the coldest temperatures but highest oxygen content, while the Indian Ocean has the warmest surface temperatures.`,
           sender: 'bot',
           timestamp: new Date().toISOString()
         };
       } else if (userInput.includes('data') || userInput.includes('download') || userInput.includes('export')) {
         // Raw data response
         botResponse = {
-          id: Date.now() + 2,
+          id: chatHistory.length + 2,
           content: `I've prepared the oceanographic data you requested for further analysis.
 
 Here is your data: [RAW_DATA_KEY:GLOBAL_ARGO_${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}]
@@ -160,8 +129,8 @@ This dataset contains temperature, salinity, and pressure measurements from glob
       } else {
         // Default text response
         botResponse = {
-          id: Date.now() + 3,
-          content: `I'm analyzing your query about "${currentMessage}". As your ARGO float data assistant, I can help with oceanographic data analysis, visualizations, and insights. You can ask me to:
+          id: chatHistory.length + 2,
+          content: `I'm analyzing your query about "${message}". As your ARGO float data assistant, I can help with oceanographic data analysis, visualizations, and insights. You can ask me to:
 
 1. Plot temperature or salinity profiles for specific regions
 2. Compare oceanographic data between different basins
@@ -174,7 +143,6 @@ For best results, try specifying the region, time period, and type of analysis y
         };
       }
       
-      console.log('Bot response created:', botResponse); // Debug log
       setChatHistory(prev => [...prev, botResponse]);
     }, 2000);
   };
@@ -359,73 +327,6 @@ For best results, try specifying the region, time period, and type of analysis y
                   <Message message={msg} />
                 </motion.div>
               ))}
-              
-              {/* Thinking indicator */}
-              {thinking && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      mb: 3,
-                      justifyContent: 'flex-start',
-                      alignItems: 'flex-start',
-                      gap: 1
-                    }}
-                  >
-                    {/* Bot Avatar */}
-                    <Box
-                      sx={{
-                        width: 32,
-                        height: 32,
-                        borderRadius: '50%',
-                        bgcolor: 'rgba(77, 171, 247, 0.1)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0,
-                        mt: 0.5,
-                        p: 0.5
-                      }}
-                    >
-                      <img 
-                        src="/FloatLogo.png" 
-                        alt="FloatChat Logo"
-                        style={{ 
-                          width: '20px', 
-                          height: '20px',
-                          objectFit: 'contain'
-                        }}
-                      />
-                    </Box>
-                    
-                    <Box
-                      sx={{
-                        px: 3,
-                        py: 2,
-                        borderRadius: '25px',
-                        backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                        color: '#FFFFFF',
-                        border: '1px solid rgba(255, 255, 255, 0.12)',
-                        boxShadow: '0 2px 12px rgba(0, 0, 0, 0.15)',
-                        backdropFilter: 'blur(10px)',
-                        maxWidth: 'fit-content',
-                        minHeight: '44px',
-                        display: 'flex',
-                        alignItems: 'center'
-                      }}
-                    >
-                      <Typography sx={{ fontSize: '15px', color: 'rgba(255, 255, 255, 0.7)' }}>
-                        Analyzing ocean data...
-                      </Typography>
-                    </Box>
-                  </Box>
-                </motion.div>
-              )}
-              
               <div ref={messagesEndRef} />
             </Box>
           </Box>
