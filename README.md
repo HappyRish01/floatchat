@@ -1,70 +1,66 @@
-# Getting Started with Create React App
+# FloatChat - Ocean Data AI Assistant
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
+FloatChat is a modern, ocean-themed chat interface designed to help users understand complex ocean data. It features a sleek UI with glassmorphism effects, gradient colors, and smooth animations.
 
-## Available Scripts
+## Features
+- Ocean-themed UI with blue and black color palette
+- Glassmorphism effects for a modern look
+- Responsive design for various screen sizes
+- Landing page with wave animations
+- Interactive chat interface
+- Navigation between home and chat pages
 
-In the project directory, you can run:
+## Tech Stack
+- React.js (v18.2.0)
+- Material UI for components
+- Framer Motion for animations
+- React Router for navigation
 
-### `npm start`
+## Project Structure
+- `/src/components/LandingPage` - Landing page component
+- `/src/components/ChatInterface` - Chat interface component
+- `/src/components/Sidebar` - Sidebar navigation component
+- `/src/components/Message` - Message bubble component
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Getting Started
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Prerequisites
+- Node.js and npm installed on your machine
 
-### `npm test`
+### Installation
+```bash
+# Clone the repository
+git clone <repository-url>
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Navigate to the project directory
+cd floatchat
 
-### `npm run build`
+# Install dependencies
+npm install
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Running the Application
+```bash
+# Start the development server
+npm start
+```
+Open [http://localhost:3000](http://localhost:3000) to view the application in your browser.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Building for Production
+```bash
+# Create an optimized production build
+npm run build
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Navigation
+- Home page: `/`
+- Chat interface: `/chat`
 
-### `npm run eject`
+Each page has navigation buttons to move between sections.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## UI Design
+- The UI follows a modern, ocean-themed design with gradients
+- Blue and dark colors represent the deep sea theme
+- Glassmorphism effects add depth and modern feel
+- Animated elements create a dynamic user experience

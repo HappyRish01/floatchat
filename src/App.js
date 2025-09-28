@@ -1,24 +1,33 @@
-import logo from './logo.svg';
+import { useState } from 'react';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
+import theme from './theme';
+
+// Import components
+import LandingPage from './components/LandingPage';
+import ChatInterface from './components/ChatInterface';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Router>
+        <Box className="App">
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/chat" element={
+              <Box sx={{ height: '100vh', width: '100vw', overflow: 'hidden' }}>
+                <ChatInterface />
+              </Box>
+            } />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </Box>
+      </Router>
+    </ThemeProvider>
   );
 }
 

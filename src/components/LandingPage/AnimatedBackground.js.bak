@@ -1,0 +1,251 @@
+import React, { useEffect, useRef } from 'react';
+import { Box } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+
+const AnimatedBackground = () => {
+  const canvasRef = useRef(null);
+  const theme = useTheme();
+  
+  useEffect(() => {
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    let animationFrameId;
+    let particles = [];
+    let connections = [];
+    
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      initParticles();
+    };
+
+    window.addEventListener('resize', resize);
+    resize();
+    
+    function initParticles() {
+      particles = [];
+      // Create particles - increase count for more visibility
+      for (let i = 0; i < 150; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          radius: Math.random() * 4 + 1.5, // Larger particles
+          color: getRandomColor(),
+          speedX: Math.random() * 0.5 - 0.25,
+          speedY: Math.random() * 0.5 - 0.25,
+          connections: []
+        });
+      }
+      
+      // Create center "node" particles
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      
+      // Add "hub" particles around the center for the wires to connect to
+      for (let i = 0; i < 8; i++) {
+        const angle = (Math.PI * 2 / 8) * i;
+        const distance = 80 + Math.random() * 40;
+        particles.push({
+          x: centerX + Math.cos(angle) * distance,
+          y: centerY + Math.sin(angle) * distance,
+          radius: 4,
+          color: theme.palette.primary.main,
+          speedX: Math.cos(angle) * 0.1,
+          speedY: Math.sin(angle) * 0.1,
+          isHub: true,
+          hubIndex: i,
+          connections: []
+        });
+      
+      // Calculate connections
+      updateConnections();
+    }
+    
+    function getRandomColor() {
+      const colors = [
+        theme.palette.primary.light + 'CC', // Added transparency
+        theme.palette.primary.main + 'DD',
+        theme.palette.secondary.main + 'EE',
+        theme.palette.secondary.light + 'DD',
+        '#64B5F6CC', // Light blue with transparency
+        '#29B6F6DD', // Lighter blue with transparency
+      ];
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+    
+    function updateConnections() {
+      connections = [];
+      
+      // Create connections between normal particles that are close to each other
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          
+          // Connect nearby particles
+          if (distance < 100) {
+            connections.push({
+              from: i,
+              to: j,
+              distance: distance,
+              opacity: 1 - distance / 100
+            });
+          }
+          
+          // Connect hub particles to many other particles
+          if ((particles[i].isHub || particles[j].isHub) && distance < 150) {
+            connections.push({
+              from: i,
+              to: j,
+              distance: distance,
+              opacity: 0.8 - distance / 200,
+              hubConnection: true
+            });
+          }
+        }
+      }
+    }
+    
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Update and draw particles
+      particles.forEach((particle, index) => {
+        // Move particles
+        particle.x += particle.speedX;
+        particle.y += particle.speedY;
+        
+        // Bounce off edges
+        if (particle.x < 0 || particle.x > canvas.width) {
+          particle.speedX = -particle.speedX;
+        }
+        
+        if (particle.y < 0 || particle.y > canvas.height) {
+          particle.speedY = -particle.speedY;
+        }
+        
+        // Keep hub particles near their position
+        if (particle.isHub) {
+          const centerX = canvas.width / 2;
+          const centerY = canvas.height / 2;
+          const angle = (Math.PI * 2 / 8) * particle.hubIndex;
+          const distance = 80 + Math.sin(Date.now() / 2000 + particle.hubIndex) * 20;
+          
+          const targetX = centerX + Math.cos(angle) * distance;
+          const targetY = centerY + Math.sin(angle) * distance;
+          
+          particle.x += (targetX - particle.x) * 0.05;
+          particle.y += (targetY - particle.y) * 0.05;
+        }
+        
+        // Draw particles
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+        ctx.fillStyle = particle.isHub ? theme.palette.secondary.main : particle.color;
+        ctx.fill();
+      });
+      
+      // Draw connections
+      connections.forEach(connection => {
+        const from = particles[connection.from];
+        const to = particles[connection.to];
+        
+        ctx.beginPath();
+        ctx.moveTo(from.x, from.y);
+        
+        if (connection.hubConnection) {
+          // Create a curved "data flow" effect for hub connections
+          const midX = (from.x + to.x) / 2;
+          const midY = (from.y + to.y) / 2;
+          const time = Date.now() / 1000;
+          const offset = 15 * Math.sin(time + connection.from + connection.to);
+          
+          // Draw a quadratic curve with a slight offset
+          ctx.quadraticCurveTo(
+            midX + offset, 
+            midY + offset, 
+            to.x, 
+            to.y
+          );
+          
+          // Add small "data packets" moving along the connection
+          if (Math.random() > 0.97) {
+            const percent = (time * 3) % 1;
+            const packetX = from.x * (1 - percent) + to.x * percent;
+            const packetY = from.y * (1 - percent) + to.y * percent;
+            
+            ctx.beginPath();
+            ctx.arc(packetX, packetY, 2, 0, Math.PI * 2);
+            ctx.fillStyle = theme.palette.secondary.main;
+            ctx.fill();
+          }
+        } else {
+          // Simple lines for other connections
+          ctx.lineTo(to.x, to.y);
+        }
+        
+        const gradient = ctx.createLinearGradient(from.x, from.y, to.x, to.y);
+        gradient.addColorStop(0, `${from.isHub ? theme.palette.secondary.main : from.color}80`);
+        gradient.addColorStop(1, `${to.isHub ? theme.palette.secondary.main : to.color}80`);
+        
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = connection.hubConnection ? 2.5 : 1.2; // Thicker connections
+        ctx.globalAlpha = connection.opacity;
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+      });
+      
+      // Update connections periodically
+      if (Math.random() > 0.97) {
+        updateConnections();
+      }
+      
+      animationFrameId = window.requestAnimationFrame(animate);
+    }
+    
+    animate();
+    
+    return () => {
+      window.removeEventListener('resize', resize);
+      window.cancelAnimationFrame(animationFrameId);
+    };
+  }, [theme]);
+
+  return (
+    <Box sx={{
+      position: 'fixed', 
+      top: 0, 
+      left: 0, 
+      width: '100%', 
+      height: '100%', 
+      zIndex: 0,
+      '&::before': {
+        content: '""',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: `radial-gradient(circle at 50% 50%, rgba(13, 71, 161, 0.15) 0%, rgba(0, 0, 10, 0.8) 100%)`,
+        zIndex: -1,
+      }
+    }}>
+      <canvas 
+        ref={canvasRef} 
+        style={{ 
+          display: 'block',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'transparent',
+        }} 
+      />
+    </Box>
+  );
+};
+
+export default AnimatedBackground;
