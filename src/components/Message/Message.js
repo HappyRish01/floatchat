@@ -145,23 +145,6 @@ const Message = ({ message }) => {
             </Typography>
           )}
         </Box>
-        
-        {/* Timestamp */}
-        <Typography 
-          sx={{ 
-            fontSize: '11px', 
-            color: 'rgba(255, 255, 255, 0.4)',
-            mt: 0.5,
-            ml: isBot ? 0 : 'auto',
-            textAlign: isBot ? 'left' : 'right',
-            maxWidth: 'fit-content'
-          }}
-        >
-          {new Date(message.timestamp).toLocaleTimeString([], { 
-            hour: '2-digit', 
-            minute: '2-digit' 
-          })}
-        </Typography>
       </motion.div>
       
     </Box>

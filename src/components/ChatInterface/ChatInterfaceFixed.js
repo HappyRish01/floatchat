@@ -24,7 +24,7 @@ const ChatInterface = () => {
   const [chatHistory, setChatHistory] = useState([
     { 
       id: 1, 
-      content: "How can I help you? I'm your ARGO float data assistant. Ask me about ocean data analysis, temperature profiles, salinity data, or other oceanographic questions.", 
+      content: "Hey I am FloatChat, be ready to dive deep and explore the Ocean", 
       sender: 'bot',
       timestamp: new Date().toISOString() 
     },

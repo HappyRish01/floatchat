@@ -9,8 +9,6 @@ import {
   Paper,
 } from '@mui/material';
 import { 
-  Send,
-  Menu,
   ArrowUpward
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
@@ -28,7 +26,6 @@ const ChatInterface = () => {
   const messagesEndRef = useRef(null);
   const [thinking, setThinking] = useState(false);
   const [typingText, setTypingText] = useState('');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   
   // Professional loading messages
   const loadingMessages = [
@@ -77,7 +74,7 @@ const ChatInterface = () => {
       
       const botResponse = {
         id: chatHistory.length + 2,
-        content: `I'm your ocean data assistant. I can help you analyze and visualize oceanographic data. Please ask me about specific data, regions, or analyses you're interested in.`,
+        content: `Hey I am FloatChat, be ready to dive deep and explore the Ocean`,
         sender: 'bot',
         timestamp: new Date().toISOString()
       };
@@ -117,42 +114,25 @@ const ChatInterface = () => {
         p: 2,
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
         top: 0,
         bgcolor: 'rgba(0, 5, 15, 0.95)',
         backdropFilter: 'blur(10px)',
         zIndex: 100,
       }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <IconButton 
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            sx={{ 
-              color: 'rgba(255, 255, 255, 0.7)',
-              '&:hover': { 
-                color: '#fff',
-                bgcolor: 'rgba(255, 255, 255, 0.1)'
-              }
-            }}
-          >
-            <Menu />
-          </IconButton>
-          
-          <Box 
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              cursor: 'pointer',
-            }}  
-            onClick={() => navigate('/')}
-          >
-            <Typography sx={{ fontSize: '1rem', fontWeight: 500 }}>
-              <span style={{ color: '#4dabf7' }}>Float</span>
-              <span style={{ color: '#ffffff' }}>Chat</span>
-            </Typography>
-          </Box>
+        <Box 
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            cursor: 'pointer',
+          }}  
+          onClick={() => navigate('/')}
+        >
+          <Typography sx={{ fontSize: '1rem', fontWeight: 500 }}>
+            <span style={{ color: '#4dabf7' }}>Float</span>
+            <span style={{ color: '#ffffff' }}>Chat</span>
+          </Typography>
         </Box>
-        
-        <Box sx={{ width: 40 }} />
       </Box>
       
       {/* Main content area with messages */}
@@ -162,158 +142,10 @@ const ChatInterface = () => {
         overflow: 'hidden',
         position: 'relative'
       }}>
-        {/* Left Sidebar with Queries */}
-        <Box sx={{
-          width: chatHistory.length === 0 ? '300px' : '0px',
-          transition: 'width 0.3s ease',
-          overflow: 'hidden',
-          display: 'flex',
-          flexDirection: 'column'
-        }}>
-          {chatHistory.length === 0 && (
-            <Box sx={{ 
-              p: 3,
-              height: '100%',
-              overflowY: 'auto',
-              '&::-webkit-scrollbar': {
-                display: 'none'
-              },
-              scrollbarWidth: 'none',
-            }}>
-              
-              {[
-                "Plot temperature profile for the Arabian Sea",
-                "Compare salinity in Pacific vs Atlantic Ocean", 
-                "Show me data from Bay of Bengal for March 2023",
-                "Analyze oxygen levels in the Southern Ocean"
-              ].map((query, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ 
-                    duration: 0.5,
-                    delay: index * 0.1
-                  }}
-                  whileHover={{ 
-                    scale: 1.05,
-                    transition: { duration: 0.2 }
-                  }}
-                  whileTap={{ 
-                    scale: 0.98,
-                    transition: { duration: 0.1 }
-                  }}
-                  style={{ 
-                    marginBottom: '16px',
-                    cursor: 'pointer'
-                  }}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('Query clicked:', query);
-                    
-                    // Set the query text in the input box
-                    setMessage(query);
-                  }}
-                >
-                  <Box
-                    sx={{
-                      p: 2.5,
-                      borderRadius: '12px',
-                      border: '1px solid rgba(77, 171, 247, 0.3)',
-                      backgroundColor: 'rgba(0, 5, 15, 0.6)',
-                      backdropFilter: 'blur(10px)',
-                      position: 'relative',
-                      overflow: 'hidden',
-                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                      '&:hover': {
-                        backgroundColor: 'rgba(77, 171, 247, 0.15)',
-                        borderColor: 'rgba(77, 171, 247, 0.6)',
-                        boxShadow: '0 8px 25px rgba(77, 171, 247, 0.25)',
-                        '& .query-text': {
-                          color: 'rgba(255, 255, 255, 1)',
-                        }
-                      },
-                      '&::before': {
-                        content: '""',
-                        position: 'absolute',
-                        top: 0,
-                        left: '-100%',
-                        width: '100%',
-                        height: '100%',
-                        background: 'linear-gradient(90deg, transparent, rgba(77, 171, 247, 0.1), transparent)',
-                        transition: 'left 0.5s ease',
-                      },
-                      '&:hover::before': {
-                        left: '100%',
-                      }
-                    }}
-                  >
-                    <Typography
-                      className="query-text"
-                      sx={{
-                        fontFamily: 'Monaco, "Courier New", monospace',
-                        fontSize: '12px',
-                        color: 'rgba(77, 171, 247, 0.9)',
-                        lineHeight: 1.4,
-                        letterSpacing: '0.5px',
-                        position: 'relative',
-                        zIndex: 1,
-                        transition: 'color 0.3s ease',
-                        '&::before': {
-                          content: '">"',
-                          color: 'rgba(0, 255, 255, 0.7)',
-                          marginRight: '8px',
-                          fontWeight: 'bold'
-                        }
-                      }}
-                    >
-                      {query}
-                    </Typography>
-                  </Box>
-                </motion.div>
-              ))}
-            </Box>
-          )}
-        </Box>
-        
-        {/* Overlay Sidebar */}
-        <Box sx={{
-          position: 'absolute',
-          left: sidebarOpen ? 0 : '-320px',
-          top: 0,
-          width: '320px',
-          height: '100%',
-          bgcolor: 'rgba(0, 5, 15, 0.95)',
-          backdropFilter: 'blur(20px)',
-          transition: 'left 0.3s ease',
-          zIndex: 1000,
-          p: 3,
-          overflowY: 'auto',
-          '&::-webkit-scrollbar': {
-            display: 'none'
-          },
-          scrollbarWidth: 'none',
-        }}>
-          <Typography sx={{ 
-            color: '#4dabf7', 
-            fontSize: '18px', 
-            fontWeight: 600, 
-            mb: 3 
-          }}>
-            Navigation
-          </Typography>
-          <Typography sx={{ 
-            color: 'rgba(255, 255, 255, 0.7)', 
-            fontSize: '14px' 
-          }}>
-            Sidebar content goes here...
-          </Typography>
-        </Box>
         
         {/* Main Chat Area */}
         <Box sx={{ 
-          flex: 1,
+          width: '100%',
           display: 'flex',
           justifyContent: 'center',
           px: 2,

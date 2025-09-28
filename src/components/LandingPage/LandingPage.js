@@ -222,7 +222,7 @@ const LandingPage = () => {
           sx={{ 
             width: '100%',
             maxWidth: '800px',
-            mb: 6,
+            mb: 3,
             position: 'relative',
           }}
           onMouseEnter={() => setIsHovered(true)}
